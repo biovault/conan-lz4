@@ -34,13 +34,12 @@ jobs:
             build-runtime: MD
             build-config: Release
 
-#          - name: Linux_gcc10
-#            os: ubuntu-20.04
-#            build-compiler: gcc
-#            build-cversion: 10
-#            build-config: Release
-#            build-os: Linux
-#            build-libcxx: libstdc++
+          - name: Windows-msvc2022
+            os: windows-2022
+            compiler: msvc-2022
+            build-cversion: 17
+            build-runtime: MD
+            build-config: Release
 
           - name: Linux_gcc11
             os: ubuntu-22.04
@@ -78,15 +77,14 @@ jobs:
             build-xcode-version: 14.3
             build-libcxx: libc++
 
-          # - name: Macos_xcode15.3
-          #  os: macos-14-large
-          #  build-compiler: apple-clang
-          #  build-cversion: 15
-          #  build-config: Release
-          #  build-os: Macos
-          #  build-xcode-version: 15.3
-          #  build-libcxx: libc++
-
+          - name: Macos_xcode15
+            os: macos-14
+            build-compiler: apple-clang
+            build-cversion: 15
+            build-config: Release
+            build-os: Macos
+            build-xcode-version: 15.4
+            build-libcxx: libc++
 
     steps:
       - name: Checkout the source
