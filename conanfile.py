@@ -108,8 +108,6 @@ endif()""")
         cmake_release = self._configure_cmake()
         cmake_release.build(build_type="Release")
 
-        cmake_relwdeb = self._configure_cmake()
-        cmake_relwdeb.build(build_type="RelWithDebInfo")
 
     # Package has no build type marking
     def package_id(self):
@@ -147,8 +145,6 @@ endif()""")
         self._pkg_bin("Debug")
         # Release
         self._pkg_bin("Release")
-        # RelWithDebInfo
-        self._pkg_bin("RelWithDebInfo")
         # In lz4Targets.cmake th variable _IMPORT_PATH assumes that the files 
         # are in lib/cmake/lz4 one level deeper than cmake/lz4
         # Move cmake dir under lib.

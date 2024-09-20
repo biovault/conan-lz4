@@ -9,7 +9,6 @@ class Lz4TestConan(ConanFile):
     name = "LZ4Test"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps"
-    requires = ("lz4/1.10.0")
     exports = "CMakeLists.txt", "example.cpp"
 
     def generate(self):
@@ -23,6 +22,9 @@ class Lz4TestConan(ConanFile):
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
+
+    def requirements(self):
+        self.requires(self.tested_reference_str)
 
     def build(self):
         cmake = CMake(self)
