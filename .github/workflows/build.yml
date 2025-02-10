@@ -48,14 +48,6 @@ jobs:
             build-runtime: MD
             build-config: Release
 
-          - name: Linux_gcc10
-            os: ubuntu-20.04
-            build-compiler: gcc
-            build-cversion: 10
-            build-config: Release
-            build-os: Linux
-            build-libcxx: libstdc++11
-
           - name: Linux_gcc11
             os: ubuntu-22.04
             build-cc: gcc
