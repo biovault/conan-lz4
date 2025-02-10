@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path, PurePosixPath
 import subprocess
 
-required_conan_version = ">=1.62.0"
+required_conan_version = ">=1.66.0"
 
 
 class Lz4Conan(ConanFile):
