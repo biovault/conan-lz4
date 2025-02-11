@@ -3,7 +3,7 @@ description: "Encapsulate cmake composite run steps that are common for Linux an
 # reference https://docs.github.com/en/free-pro-team@latest/actions/creating-actions/creating-a-composite-run-steps-action
 inputs:
   conan-compiler:
-    description: "gcc9 apple-clang"
+    description: "gcc apple-clang"
     required: true
   conan-cc:
     description: "gcc clang"
