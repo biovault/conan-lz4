@@ -41,13 +41,6 @@ jobs:
             build-runtime: MD
             build-config: Release
 
-          - name: Windows-msvc2025
-            os: windows-2025
-            compiler: msvc-2022
-            build-cversion: 17
-            build-runtime: MD
-            build-config: Release
-
           - name: Linux_gcc11
             os: ubuntu-22.04
             build-cc: gcc
