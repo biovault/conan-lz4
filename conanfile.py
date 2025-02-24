@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path, PurePosixPath
 import subprocess
 
-required_conan_version = ">=1.62.0"
+required_conan_version = ">=1.66.0"
 
 
 class Lz4Conan(ConanFile):
@@ -106,8 +106,10 @@ endif()""")
         cmake_debug.build(build_type="Debug")
 
         cmake_release = self._configure_cmake()
+        cmake_release.build(build_type="RelWithDebInfo")
+        
+        cmake_release = self._configure_cmake()
         cmake_release.build(build_type="Release")
-
 
     # Package has no build type marking
     def package_id(self):
@@ -143,6 +145,8 @@ endif()""")
         print(f"********** package dir {self.package_folder}")
         # Debug
         self._pkg_bin("Debug")
+        # RelWithDebInfo
+        self._pkg_bin("RelWithDebInfo")
         # Release
         self._pkg_bin("Release")
         # In lz4Targets.cmake th variable _IMPORT_PATH assumes that the files 
