@@ -78,6 +78,7 @@ endif()""")
         tc.variables["CMAKE_CXX_STANDARD"] = "17"
         if self.settings.os == "Linux":
             tc.variables["CMAKE_C_STANDARD"] = "17"
+            tc.variables["CMAKE_C_STANDARD_REQUIRED"] = "ON"
         tc.variables["BUILD_STATIC_LIBS"] = "True"
 
         return tc
