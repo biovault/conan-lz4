@@ -76,11 +76,13 @@ endif()""")
             tc.variables["CMAKE_CONFIGURATION_TYPES"] = "Debug;Release;RelWithDebInfo"
 
         tc.variables["CMAKE_CXX_STANDARD"] = "17"
+        # Restrict the C standard to 17 to avoid the issues with
+        # isoc23 when consuming this in manylinux for nptsne building
         #if self.settings.os == "Linux":
         #    tc.variables["CMAKE_C_STANDARD"] = "17"
         #    tc.variables["CMAKE_C_STANDARD_REQUIRED"] = "ON"
         #    tc.variables["CMAKE_C_EXTENSIONS"] = "OFF"
-        tc.variables["BUILD_STATIC_LIBS"] = "True"
+        #tc.variables["BUILD_STATIC_LIBS"] = "True"
 
         return tc
 
@@ -107,13 +109,13 @@ endif()""")
     def build(self):
         # Build both release and debug for dual packaging
         cmake_debug = self._configure_cmake()
-        cmake_debug.build(build_type="Debug")
+        cmake_debug.build(build_type="Debug", cli_args=["--verbose"])
 
         cmake_release = self._configure_cmake()
-        cmake_release.build(build_type="RelWithDebInfo")
+        cmake_release.build(build_type="RelWithDebInfo", cli_args=["--verbose"])
         
         cmake_release = self._configure_cmake()
-        cmake_release.build(build_type="Release")
+        cmake_release.build(build_type="Release", cli_args=["--verbose"])
 
     # Package has no build type marking
     def package_id(self):
