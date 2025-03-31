@@ -23,8 +23,8 @@ class Lz4Conan(ConanFile):
     default_options = {"shared": True, "testing": False}
     generators = "CMakeDeps"
     exports = "cmake/*"
-    # provide BLAS_ROOT - 
-    # On Windows side load this dependency with nuget 
+    # provide BLAS_ROOT -
+    # On Windows side load this dependency with nuget
     # e.g. D:/temp/testopenblas/OpenBLAS.0.2.14.1/lib/native
     # with sub dirs bin libb include
     BLAS_ROOT = Path(os.environ.get("BLAS_ROOT", ""))
@@ -35,10 +35,17 @@ class Lz4Conan(ConanFile):
         self.run(f"git checkout tags/v{self.version}")
         os.chdir("build/cmake")
         # Prevent early resolution of CMAKE_INSTALL_LIBDIR in variable by prefix with \
-        tools.replace_in_file("CMakeLists.txt", "set(LZ4_PKG_INSTALLDIR \"${CMAKE_INSTALL_LIBDIR}/cmake/lz4\")", "set(LZ4_PKG_INSTALLDIR \"\${CMAKE_INSTALL_LIBDIR}/cmake/lz4\")")
-        # Allow linking against lz4::lz4 
-        tools.replace_in_file("lz4Config.cmake.in", """
-include( "${CMAKE_CURRENT_LIST_DIR}/lz4Targets.cmake" )""", """
+        tools.replace_in_file(
+            "CMakeLists.txt",
+            'set(LZ4_PKG_INSTALLDIR "${CMAKE_INSTALL_LIBDIR}/cmake/lz4")',
+            'set(LZ4_PKG_INSTALLDIR "\${CMAKE_INSTALL_LIBDIR}/cmake/lz4")',
+        )
+        # Allow linking against lz4::lz4
+        tools.replace_in_file(
+            "lz4Config.cmake.in",
+            """
+include( "${CMAKE_CURRENT_LIST_DIR}/lz4Targets.cmake" )""",
+            """
 include( "${CMAKE_CURRENT_LIST_DIR}/lz4Targets.cmake" )
 if(NOT TARGET lz4::lz4)
     add_library(lz4::lz4 INTERFACE IMPORTED)
@@ -47,10 +54,9 @@ if(NOT TARGET lz4::lz4)
     else()
         set_target_properties(lz4::lz4 PROPERTIES INTERFACE_LINK_LIBRARIES LZ4::lz4_static)
     endif()
-endif()""")
-        
-    
-    
+endif()""",
+        )
+
     def _get_tc(self):
         """Generate the CMake configuration using
         multi-config generators on all platforms, as follows:
@@ -70,7 +76,7 @@ endif()""")
 
         if self.settings.os == "Linux":
             generator = "Ninja Multi-Config"
-        
+
         tc = CMakeToolchain(self, generator=generator)
         if self.settings.os == "Linux":
             tc.variables["CMAKE_CONFIGURATION_TYPES"] = "Debug;Release;RelWithDebInfo"
@@ -79,11 +85,13 @@ endif()""")
         # Restrict the C standard to 17 to avoid the issues with
         # isoc23 when consuming this in manylinux for nptsne building
         if self.settings.os == "Linux" and self.settings.compiler.version == "14":
-            tc.variables["CMAKE_C_FLAGS"] = "${CMAKE_C_FLAGS} -m64 -std=c99 -U_ISOC23_SOURCE -D_DEFAULT_SOURCE"
+            tc.variables["CMAKE_C_FLAGS"] = (
+                "${CMAKE_C_FLAGS} -m64 -std=c99 -U_ISOC23_SOURCE -D_DEFAULT_SOURCE"
+            )
         #    tc.variables["CMAKE_C_STANDARD"] = "17"
         #    tc.variables["CMAKE_C_STANDARD_REQUIRED"] = "ON"
         #    tc.variables["CMAKE_C_EXTENSIONS"] = "OFF"
-        #tc.variables["BUILD_STATIC_LIBS"] = "True"
+        tc.variables["BUILD_STATIC_LIBS"] = "True"
 
         return tc
 
@@ -92,7 +100,6 @@ endif()""")
         # based on build configuration.
         self.cpp.package.libdirs = ["lib/$<CONFIG>"]
         self.cpp.package.bindirs = ["bin/$<CONFIG>"]
-
 
     def generate(self):
         print("In generate")
@@ -114,7 +121,7 @@ endif()""")
 
         cmake_release = self._configure_cmake()
         cmake_release.build(build_type="RelWithDebInfo", cli_args=["--verbose"])
-        
+
         cmake_release = self._configure_cmake()
         cmake_release.build(build_type="Release", cli_args=["--verbose"])
 
@@ -135,12 +142,12 @@ endif()""")
 
         src_dir = f"{build_type}"
         dst_lib = f"lib/{build_type}"
-        #dst_bin = f"bin/{build_type}"
+        # dst_bin = f"bin/{build_type}"
 
-        #self.copy("*.lib", dst=dst_lib, keep_path=False)
-        #self.copy("*.a", dst=dst_lib, keep_path=False)
-        #self.copy("*.exe", dst=dst_bin, keep_path=False)
-        #self.copy("*.dll", dst=dst_bin, keep_path=False)
+        # self.copy("*.lib", dst=dst_lib, keep_path=False)
+        # self.copy("*.a", dst=dst_lib, keep_path=False)
+        # self.copy("*.exe", dst=dst_bin, keep_path=False)
+        # self.copy("*.dll", dst=dst_bin, keep_path=False)
         if ((build_type == "Debug") or (build_type == "RelWithDebInfo")) and (
             self.settings.compiler == "Visual Studio"
         ):
@@ -148,7 +155,7 @@ endif()""")
             self.copy("*.pdb", src=src_dir, dst=dst_lib, keep_path=False)
 
     def package(self):
-        #self.copy("*.h", src="lz4/lib", dst="include", keep_path=True)
+        # self.copy("*.h", src="lz4/lib", dst="include", keep_path=True)
         print(f"********** package dir {self.package_folder}")
         # Debug
         self._pkg_bin("Debug")
@@ -156,8 +163,10 @@ endif()""")
         self._pkg_bin("RelWithDebInfo")
         # Release
         self._pkg_bin("Release")
-        # In lz4Targets.cmake th variable _IMPORT_PATH assumes that the files 
+        # In lz4Targets.cmake th variable _IMPORT_PATH assumes that the files
         # are in lib/cmake/lz4 one level deeper than cmake/lz4
         # Move cmake dir under lib.
-        shutil.move(Path(self.package_folder, "cmake"), Path(self.package_folder, "lib", "cmake"))
-
+        shutil.move(
+            Path(self.package_folder, "cmake"),
+            Path(self.package_folder, "lib", "cmake"),
+        )
