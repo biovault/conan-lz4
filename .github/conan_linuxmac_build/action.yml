@@ -80,7 +80,8 @@ runs:
       run: |
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]] && [[ ${{ inputs.conan-channel }} == "python" ]]; then
           scl enable gcc-toolset-${{ inputs.conan-compiler-version }} bash
-          echo Compiler settings CC: $CC  CXX: $CXX
+          export CC=gcc  
+          export CXX=g++
         fi
         export CONAN_USER_HOME=`pwd`/_conan
         echo Add LKEB artifactory as remote
@@ -108,6 +109,7 @@ runs:
         conan profile update settings.compiler.libcxx=${{ inputs.conan-libcxx-version}} action_build
         conan profile show action_build
         export CONAN_SKIP_BROKEN_SYMLINKS_CHECK=1
+        echo Compiler settings before create CC: $CC  CXX: $CXX
         if [[ ${{ inputs.conan-build-os }} == "Macos" ]]; then
           conan create . lz4/1.10.0@lkeb/${{ inputs.conan-channel }} -pr:h action_build -pr:b action_build -s build_type=Release
         else
