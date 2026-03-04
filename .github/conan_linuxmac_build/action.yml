@@ -46,7 +46,7 @@ runs:
         pip3 install h5py
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then 
           if [[ ${{ inputs.conan-channel }} == "python" ]]; then
-            apt-get install -y ninja-build
+            dnf install -y ninja-build
           else 
             sudo apt-get install -y ninja-build
           fi
@@ -66,8 +66,7 @@ runs:
         
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then
           if [[ ${{ inputs.conan-channel }} == "python" ]]; then
-            apt-get update
-            apt-get install -y libopenblas-dev
+            dnf install -y libopenblas-devel
           else
             sudo apt-get update
             sudo apt-get install -y libopenblas-dev
