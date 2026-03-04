@@ -67,6 +67,7 @@ runs:
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then
           if [[ ${{ inputs.conan-channel }} == "python" ]]; then
             dnf install -y openblas-devel
+            dnf install -y gcc-toolset-${{ inputs.conan-compiler-version}}-gcc gcc-toolset-${{ inputs.conan-compiler-version}}-gcc-c++
           else
             sudo apt-get update
             sudo apt-get install -y libopenblas-dev
@@ -77,6 +78,9 @@ runs:
 
     - name: Build with conan
       run: |
+        if [[ ${{ inputs.conan-build-os }} == "Linux" ]] && [[ ${{ inputs.conan-channel }} == "python" ]]; then
+          scl enable gcc-toolset-${{ inputs.conan-compiler-version }} bash
+        fi
         export CONAN_USER_HOME=`pwd`/_conan
         echo Add LKEB artifactory as remote
         conan remote add $CONAN_LKEB_ARTIFACTORY $CONAN_UPLOAD
