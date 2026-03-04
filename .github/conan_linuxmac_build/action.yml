@@ -80,6 +80,7 @@ runs:
       run: |
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]] && [[ ${{ inputs.conan-channel }} == "python" ]]; then
           scl enable gcc-toolset-${{ inputs.conan-compiler-version }} bash
+          echo Compiler settings CC: $CC  CXX: $CXX
         fi
         export CONAN_USER_HOME=`pwd`/_conan
         echo Add LKEB artifactory as remote
