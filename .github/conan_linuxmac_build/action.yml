@@ -44,7 +44,13 @@ runs:
         pip3 install "markupsafe<2.1"
         pip3 install -Iv cmake>=3.17
         pip3 install h5py
-        if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then sudo apt-get install -y ninja-build; fi
+        if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then 
+          if [[ ${{ inputs.conan-channel }} == "python" ]]; then
+            apt-get install -y ninja-build
+          else 
+            sudo apt-get install -y ninja-build
+          fi
+        fi
 
         export CONAN_CMAKE_PROGRAM=`which cmake`
         echo CMake version:
@@ -59,8 +65,13 @@ runs:
         cat cert.pem >> $conanhome/cacert.pem
         
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then
-          sudo apt-get update
-          sudo apt-get install -y libopenblas-dev
+          if [[ ${{ inputs.conan-channel }} == "python" ]]; then
+            apt-get update
+            apt-get install -y libopenblas-dev
+          else
+            sudo apt-get update
+            sudo apt-get install -y libopenblas-dev
+          fi
         fi
 
       shell: bash
