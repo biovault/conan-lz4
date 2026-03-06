@@ -34,6 +34,8 @@ inputs:
     default: "stable" # Default value for input2
     required: false
 
+# for manylinux assume default gcc version is 14
+# True for manylinux_2_28
 runs:
   using: "composite"
   steps:
@@ -64,21 +66,25 @@ runs:
         conanhome=`conan config home`
         cat cert.pem >> $conanhome/cacert.pem
         
+        
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then
           if [[ ${{ inputs.conan-channel }} == "python" ]]; then
             dnf install -y openblas-devel
-            dnf install -y gcc-toolset-${{ inputs.conan-compiler-version}}-gcc gcc-toolset-${{ inputs.conan-compiler-version}}-gcc-c++
+            if [[ inputs.conan-compiler-version != "14"]]; then
+              dnf install -y gcc-toolset-${{ inputs.conan-compiler-version}}-gcc gcc-toolset-${{ inputs.conan-compiler-version}}-gcc-c++
+            fi
           else
             sudo apt-get update
             sudo apt-get install -y libopenblas-dev
           fi
         fi
 
+
       shell: bash
 
     - name: Build with conan
       run: |
-        if [[ ${{ inputs.conan-build-os }} == "Linux" ]] && [[ ${{ inputs.conan-channel }} == "python" ]]; then
+        if [[ ${{ inputs.conan-build-os }} == "Linux" ]] && [[ ${{ inputs.conan-channel }} == "python" ]] && [[ inputs.conan-compiler-version != "14"]]; then
           source scl_source enable gcc-toolset-${{ inputs.conan-compiler-version }}
           export CC=`which gcc`  
           export CXX=`which g++`
