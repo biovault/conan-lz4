@@ -184,15 +184,15 @@ jobs:
     strategy:
       matrix:
         include: 
-          #- name: python manylinux_2_28_gcc14
-          #  build-cc: gcc
-          #  build-cxx: g++
-          #  build-compiler: gcc
-          #  build-cversion: 14
-          #  build-config: Release
-          #  build-os: Linux
-          #  build-libcxx: libstdc++11
-          #  build-arch: x86_64    
+          - name: python manylinux_2_28_gcc14
+            build-cc: gcc
+            build-cxx: g++
+            build-compiler: gcc
+            build-cversion: 14
+            build-config: Release
+            build-os: Linux
+            build-libcxx: libstdc++11
+            build-arch: x86_64    
             
           - name: python manylinux_2_28_gcc12
             build-cc: gcc
@@ -233,6 +233,6 @@ jobs:
           conan-user: ${{secrets.LKEB_UPLOAD_USER}}
           conan-password: ${{secrets.LKEB_UPLOAD_USER_PASSWORD}}
           conan-pem: ${{secrets.LKEB_UPLOAD_CERT_CHAIN}}
-          conan-cc: gcc-${{matrix.build-cversion}}
-          conan-cxx: g++-${{matrix.build-cversion}} 
+          conan-cc: ${{matrix.build-cversion}}
+          conan-cxx: ${{matrix.build-cversion}} 
           conan-channel: python        
