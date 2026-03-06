@@ -70,7 +70,7 @@ runs:
         if [[ ${{ inputs.conan-build-os }} == "Linux" ]]; then
           if [[ ${{ inputs.conan-channel }} == "python" ]]; then
             dnf install -y openblas-devel
-            if [[ inputs.conan-compiler-version != "14"]]; then
+            if [[ inputs.conan-compiler-version != "14" ]]; then
               dnf install -y gcc-toolset-${{ inputs.conan-compiler-version}}-gcc gcc-toolset-${{ inputs.conan-compiler-version}}-gcc-c++
             fi
           else
@@ -84,7 +84,7 @@ runs:
 
     - name: Build with conan
       run: |
-        if [[ ${{ inputs.conan-build-os }} == "Linux" ]] && [[ ${{ inputs.conan-channel }} == "python" ]] && [[ inputs.conan-compiler-version != "14"]]; then
+        if [[ ${{ inputs.conan-build-os }} == "Linux" ]] && [[ ${{ inputs.conan-channel }} == "python" ]] && [[ inputs.conan-compiler-version != "14" ]]; then
           source scl_source enable gcc-toolset-${{ inputs.conan-compiler-version }}
           export CC=`which gcc`  
           export CXX=`which g++`
